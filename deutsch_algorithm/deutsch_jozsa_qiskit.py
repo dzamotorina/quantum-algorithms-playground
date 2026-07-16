@@ -57,11 +57,9 @@ def dj_query(num_qubits):
         replace=False,
     )
 
-    def add_cx(qc, bit_string):
+    def prepare_controls(qc, bit_string):
         """
         Helper function that adds X gates to input qubits according to bit_string.
-
-        The name add_cx is a bit misleading; it adds X gates, not CNOT gates.
 
         We reverse bit_string because Qiskit uses little-endian qubit ordering:
             q0 corresponds to the rightmost bit.
@@ -87,7 +85,7 @@ def dj_query(num_qubits):
 
         # Temporarily flip selected input qubits so that the desired pattern
         # can be detected by the multi-controlled X gate.
-        qc = add_cx(qc, bit_string)
+        qc = prepare_controls(qc, bit_string)
 
         # Multi-controlled X:
         #
@@ -100,7 +98,7 @@ def dj_query(num_qubits):
         #
         # This is important because the oracle should not permanently change
         # the input register. It should only modify the output qubit.
-        qc = add_cx(qc, bit_string)
+        qc = prepare_controls(qc, bit_string)
 
     qc.barrier()
 
